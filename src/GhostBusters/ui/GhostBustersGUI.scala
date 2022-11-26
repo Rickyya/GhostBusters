@@ -29,7 +29,7 @@ object GhostBustersGUI extends SimpleSwingApplication:
 
 
     // Components:
-    val titleLabel = Label("Haunted House Adventure")              //Label for the title of the game
+    val titleLabel = Label("Haunted House House")              //Label for the title of the game
     titleLabel.foreground = white                                       //Set foreground (text) color to white
     titleLabel.font = new Font("Monospaced", 100, 85)                   //Set font attributes
 
@@ -135,20 +135,20 @@ object GhostBustersGUI extends SimpleSwingApplication:
         quit()
 
     def openGuide() =
-      val file = new File("src/GhostBusters/assets/Playing guide.pdf")
+      val file = new File("src/Ghostbusters/assets/Playing guide.pdf")
       Desktop.getDesktop.open(file)
 
     def playMusicOnStart() =
-      val music = new File("src/GhostBusters/assets/bg_music.wav")
+      val music = new File("src/Ghostbusters/assets/bg_music.wav")
       val audio = AudioSystem.getAudioInputStream(music)
       val clip = AudioSystem.getClip
-      clip.loop(Clip.LOOP_CONTINUOUSLY)
+      clip.loop(10000)
       clip.open(audio)
       clip.start()
 
 
     // Set up the GUI’s initial state:
-    this.title = "Haunted House Adventure by Anshul & Ricky | Aalto University, 2022"
+    this.title = "Haunted House House by Anshul & Ricky | Aalto University, 2022"
     this.location = Point(50, 50)
     this.resizable = false
     this.preferredSize = Toolkit.getDefaultToolkit.getScreenSize
@@ -188,6 +188,7 @@ object GhostBustersGUI extends SimpleSwingApplication:
       minimumSize = preferredSize
       background = darkGray
       foreground = white
+      caret.color = white
       font = new Font("Monospaced", 100, 20)
 
     val inventoryListing = new TextArea(2, 10):
@@ -212,9 +213,9 @@ object GhostBustersGUI extends SimpleSwingApplication:
     turnCounter.foreground = white
     turnCounter.font = new Font("Monospaced", 100, 20)
 
-    val imageIcon = new ImageIcon("src/GhostBusters/assets/images/ghost.png").getImage
+    val imageIcon = new ImageIcon("src/Ghostbusters/assets/images/ghost.png").getImage
     val imageSize = Toolkit.getDefaultToolkit.getScreenSize
-    val scaledImage = new ImageIcon(imageIcon.getScaledInstance((imageSize.width/5.5).toInt, ((imageSize.width/5.5)/1.27).toInt,  java.awt.Image.SCALE_SMOOTH))
+    val scaledImage = new ImageIcon(imageIcon.getScaledInstance((imageSize.width/4).toInt, ((imageSize.width/4)/1.27).toInt,  java.awt.Image.SCALE_SMOOTH))
     var image = new Label { icon =  scaledImage}
 
     val label1 = Label("Description:")
@@ -243,7 +244,7 @@ object GhostBustersGUI extends SimpleSwingApplication:
     this.contents = new GridBagPanel:
       import scala.swing.GridBagPanel.Anchor.*
       import scala.swing.GridBagPanel.Fill
-      layout += image              -> Constraints(2, 1, 1, 4, 0, 0, SouthEast.id, Fill.None.id, Insets(0, 2, 0, 0), 0, 0)
+      layout += image              -> Constraints(2, 1, 1, 4, 0, 0, SouthEast.id, Fill.None.id, Insets(0, 0, 0, 0), 0, 0)
       layout += label1             -> Constraints(0, 0, 1, 1, 0, 1, NorthWest.id, Fill.None.id, Insets(5,  5, 5, 5), 0, 0)
       layout += label2             -> Constraints(0, 1, 1, 1, 0, 0, NorthWest.id, Fill.None.id, Insets(5, 5, 5, 5), 0, 0)
       layout += label3             -> Constraints(0, 2, 1, 1, 0, 0, NorthWest.id, Fill.None.id, Insets(5, 5, 5, 5), 0, 0)
@@ -258,7 +259,7 @@ object GhostBustersGUI extends SimpleSwingApplication:
 
     // Event Handlers:
     def openGuide() =
-      val file = new File("GhostBusters/Playing guide.pdf")
+      val file = new File("House/Playing guide.pdf")
       Desktop.getDesktop.open(file)
 
     def playTurn(command: String) =
@@ -273,7 +274,8 @@ object GhostBustersGUI extends SimpleSwingApplication:
       if !this.game.isOver then
         this.turnOutput.text = info
       else
-        this.turnOutput.text = info + "\n\n" + this.game.goodbyeMessage
+        this.turnOutput.text = this.game.goodbyeMessage
+        gameOverHandler()
       this.locationInfo.text = this.player.location.fullDescription + "\n"
       this.inventoryListing.text = this.player.inventory + "\n"
       this.turnCounter.text = "Turns played: " + this.game.turnCount
@@ -281,6 +283,10 @@ object GhostBustersGUI extends SimpleSwingApplication:
       this.image.visible = false
       this.image.visible = true
 
+    def gameOverHandler() =
+      val optionSelected = Dialog.showInput(top, "NIce", optionType = Dialog.Options.OkCancel, title = "Game Over!")
+      if optionSelected == Dialog.Result.Ok then
+        quit()
 
     // Menu:
     this.menuBar = new MenuBar:
@@ -293,7 +299,7 @@ object GhostBustersGUI extends SimpleSwingApplication:
 
 
     // Set up the GUI’s initial state:
-    this.title = "Haunted House Adventure by Anshul & Ricky | Aalto University, 2022"
+    this.title = "Haunted House House by Anshul & Ricky | Aalto University, 2022"
     this.updateInfo(this.game.welcomeMessage)
     this.location = Point(50, 50)
     this.resizable = false
@@ -308,5 +314,4 @@ object GhostBustersGUI extends SimpleSwingApplication:
   private given CanEqual[Key.Value, Key.Value] = CanEqual.derived
 
 end GhostBustersGUI
-
 

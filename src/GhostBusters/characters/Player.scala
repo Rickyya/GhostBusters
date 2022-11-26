@@ -51,7 +51,7 @@ class Player(startingRoom: Room, ghost: GhostType):
     val badWords = Vector("genital", "reproductive", "reproductive organs", "genitals", "groin", "retarded", "puffy")
     while badWords.exists( (word) => taunt.contains(word) ) do
       taunt = connect
-    taunt.substring(13, taunt.length - 2)
+    "\"" + taunt.substring(13, taunt.length - 2) + "\"" + "\n" + "  " + s"- ${ghost.name.get} the Ghost \uD83D\uDC7B"
 
   def quit() =
     this.quitCommandGiven = true
