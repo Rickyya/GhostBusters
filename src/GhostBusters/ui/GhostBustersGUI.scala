@@ -284,7 +284,7 @@ object GhostBustersGUI extends SimpleSwingApplication:
       this.image.visible = true
 
     def gameOverHandler() =
-      val optionSelected = Dialog.showInput(top, "NIce", optionType = Dialog.Options.OkCancel, title = "Game Over!")
+      val optionSelected = Dialog.showConfirmation(top, "NIce", optionType = Dialog.Options.OkCancel, title = "Game Over!")
       if optionSelected == Dialog.Result.Ok then
         quit()
 
