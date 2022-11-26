@@ -35,7 +35,7 @@ class Player(startingRoom: Room, ghost: GhostType):
     
   def sameRoomWithGhost =
     if this.location == ghost.location then
-      val mathProblem = MathHelper.getMathProblem
+      val mathProblem = MathHelper().getMathProblem()
 
   def guess(name: String) =
     if name.toLowerCase == this.ghost.toString.toLowerCase then
