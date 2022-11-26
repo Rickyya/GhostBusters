@@ -12,6 +12,7 @@ import java.awt.Color.*
 import java.awt.Graphics2D.*
 import java.io.File
 import javax.sound.sampled.*
+import scala.swing.Dialog.Message
 
 /** The singleton object `AdventureGUI` represents a GUI-based version of the Adventure
   * game application. The object serves as a possible entry point for the game app, and can
@@ -29,22 +30,29 @@ object GhostBustersGUI extends SimpleSwingApplication:
 
 
     // Components:
-    val titleLabel = Label("Haunted House House")              //Label for the title of the game
+    val titleLabel = Label("Ghost Busters")                        //Label for the title of the game
     titleLabel.foreground = white                                       //Set foreground (text) color to white
     titleLabel.font = new Font("Monospaced", 100, 85)                   //Set font attributes
 
     val authorsLabel = Label("By: Anshul Mahajan & Ricky Foxell")  //Label for the authors of the game
     authorsLabel.foreground = white                                     //Set foreground (text) color to white
-    authorsLabel.font = new Font("Monospaced", 100, 35)                 //Set font attributes
+    authorsLabel.font = new Font("Monospaced", 100, 25)                 //Set font attributes
+
+    val headlineLabel = new Label("A Haunted House Adventure")
+    headlineLabel.foreground = white
+    headlineLabel.font = new Font("Monospaced", 100, 35)
 
     val topHeader = new GridPanel(2, 1):                           //Header Element -> contains the title of the game and the name of authors.
       background = darkGray
       contents += titleLabel
-      contents += authorsLabel
+      contents += new GridPanel(4,1):
+        background = darkGray
+        contents += headlineLabel
+        contents += authorsLabel
       maximumSize = this.preferredSize
       minimumSize = this.preferredSize
 
-    var innerPlayButton = new Button("Play"):
+    var innerPlayButton = new Button("Start Game"):
       font = new Font("Monospaced", 100, 35)
       contentAreaFilled = false
       background = black
@@ -69,7 +77,7 @@ object GhostBustersGUI extends SimpleSwingApplication:
       add(innerGuideButton, BorderPanel.Position.Center)
       border = Swing.EmptyBorder(0, 0, 10, 0)
 
-    var innerQuitButton = new Button("Quit"):
+    var innerQuitButton = new Button("Quit Game"):
       font = new Font("Monospaced", 100, 35)
       contentAreaFilled = false
       background = black
@@ -102,7 +110,7 @@ object GhostBustersGUI extends SimpleSwingApplication:
     this.reactions += {
       case clickEvent: ButtonClicked =>
         val nameOfButton = clickEvent.source.text.toLowerCase()
-        if nameOfButton == "play" then
+        if nameOfButton == "start game" then
           playButtonHandler()
         else if nameOfButton == "open guide" then
           helpButtonHandler()
@@ -148,7 +156,7 @@ object GhostBustersGUI extends SimpleSwingApplication:
 
 
     // Set up the GUI’s initial state:
-    this.title = "Haunted House House by Anshul & Ricky | Aalto University, 2022"
+    this.title = "Ghost Busters by Anshul & Ricky | Aalto University, 2022"
     this.location = Point(50, 50)
     this.resizable = false
     this.preferredSize = Toolkit.getDefaultToolkit.getScreenSize
@@ -266,6 +274,7 @@ object GhostBustersGUI extends SimpleSwingApplication:
       val turnReport = this.game.playTurn(command)
       if this.player.hasQuit then
         this.dispose()
+        top.visible = true
       else
         this.updateInfo(turnReport)
         this.input.enabled = !this.game.isOver
@@ -284,9 +293,21 @@ object GhostBustersGUI extends SimpleSwingApplication:
       this.image.visible = true
 
     def gameOverHandler() =
-      val optionSelected = Dialog.showConfirmation(top, "NIce", optionType = Dialog.Options.OkCancel, title = "Game Over!")
-      if optionSelected == Dialog.Result.Ok then
+      val options = Vector(" Main Menu ", "Quit")
+      var message = ""
+      var messageT = Message.Info
+      if this.player.hasLost then
+        message = "Loser!"
+        messageT = Message.Error
+      else
+        message = "Winner"
+      val optionSelected = Dialog.showOptions(top, message, title = "Game Over!", optionType = Dialog.Options.YesNo, entries = options, initial = 0, messageType = messageT)
+      if optionSelected == Dialog.Result.No then
         quit()
+      else
+        dispose()
+        top.visible = true
+
 
     // Menu:
     this.menuBar = new MenuBar:
@@ -299,7 +320,7 @@ object GhostBustersGUI extends SimpleSwingApplication:
 
 
     // Set up the GUI’s initial state:
-    this.title = "Haunted House House by Anshul & Ricky | Aalto University, 2022"
+    this.title = "Ghost Busters by Anshul & Ricky | Aalto University, 2022"
     this.updateInfo(this.game.welcomeMessage)
     this.location = Point(50, 50)
     this.resizable = false
