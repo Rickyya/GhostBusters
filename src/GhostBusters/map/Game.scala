@@ -65,7 +65,7 @@ class Game:
   val ghost = allGhosts(Random.nextInt(allGhosts.length))
   val randomNames = Vector("Michael", "George", "Lisa", "Emma")
   val randomName = randomNames(Random.nextInt(randomNames.size))
-  ghost.init(randomName, basement, allRooms)
+  ghost.init(randomName + " the Ghost", basement, allRooms)
   print(ghost) //REMVOVE IN PROD
 
   /** The character that the player controls in the game. */

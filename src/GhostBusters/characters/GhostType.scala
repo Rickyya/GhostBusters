@@ -20,9 +20,7 @@ enum GhostType(traits: Map[String, Any]):
   private def getAllRooms = allRooms.get
   private def getIndicators = traits
   private def getCurrentRoomIndicators = getLocation.indicators
-  private def setLocation(loc: Room) =
-    location = Option(loc)
-    println(loc)
+  private def setLocation(loc: Room) = location = Option(loc)
 
   def init(nameToSet: String, startingRoom: Room, rooms: Vector[Room]) =
     // Set variables

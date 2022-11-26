@@ -11,6 +11,7 @@ import scala.util.Random
 
 class Player(startingRoom: Room, ghost: GhostType):
 
+  var angeredGhost = false
   private var currentRoom = startingRoom        // gatherer: changes in relation to the previous location
   private var quitCommandGiven = false                // one-way flag
   private var nameGuessed = false
@@ -51,7 +52,7 @@ class Player(startingRoom: Room, ghost: GhostType):
     val badWords = Vector("genital", "reproductive", "reproductive organs", "genitals", "groin", "retarded", "puffy")
     while badWords.exists( (word) => taunt.contains(word) ) do
       taunt = connect
-    "\"" + taunt.substring(13, taunt.length - 2) + "\"" + "\n" + "  " + s"- ${ghost.name.get} the Ghost \uD83D\uDC7B"
+    "\"" + taunt.substring(13, taunt.length - 2) + "\"" + "\n" + "  " + s"- ${ghost.name.get} \uD83D\uDC7B"
 
   def quit() =
     this.quitCommandGiven = true
@@ -67,6 +68,13 @@ class Player(startingRoom: Room, ghost: GhostType):
     else
       "Inventory" + "\n" + "You are empty-handed."
 
+  def angerGhost =
+    if angeredGhost then
+      angeredGhost = false
+      location.indicators.clear()
+      "\n\n" + ghost.name.get + ": You have found something that belongs to me... You will regret this\n\nYou realize that the room was wiped clean by the ghost..."
+    else
+      ""
 
   def get(itemName: String) =
     if itemName == "camera" then
@@ -91,7 +99,7 @@ class Player(startingRoom: Room, ghost: GhostType):
 
   def use(itemName: String) =
     if has(itemName) then
-      this.inv(itemName).use
+      this.inv(itemName).use + angerGhost
     else
       s"You don't have $itemName"
   
@@ -103,7 +111,7 @@ class Player(startingRoom: Room, ghost: GhostType):
 
   def examine(itemName: String) =
     if has(itemName) then
-      this.inv(itemName).toString
+      this.inv(itemName).examine + angerGhost
     else
       "You don't have " + itemName
 

@@ -10,7 +10,7 @@ class Room(val name: String, val description: String, val isStaircase: Boolean):
   def neighbours = neighbors
 
   // Ghost indicators
-  var indicators: Map[String, Any] = Map("fingerprints"->false, "bacteria"->false, "temp"->"normal")
+  var indicators: Map[String, Any] = Map().withDefaultValue(false)
   // Installables
   var cameraInstalled: Option[Camera] = None
   var soundrecorderInstalled: Option[Soundrecorder] = None
