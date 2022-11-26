@@ -30,19 +30,19 @@ object GhostBustersGUI extends SimpleSwingApplication:
 
 
     // Components:
-    val titleLabel = Label("\uD83D\uDC7B Ghost Busters \uD83D\uDC7B")                        //Label for the title of the game
-    titleLabel.foreground = white                                       //Set foreground (text) color to white
-    titleLabel.font = new Font("Monospaced", 100, 85)                   //Set font attributes
+    val titleLabel = Label("\uD83D\uDC7B Ghost Busters \uD83D\uDC7B")   //Label for the title of the game
+    titleLabel.foreground = white                                         //Set foreground (text) color to white
+    titleLabel.font = new Font("Monospaced", 100, 85)                     //Set font attributes
 
-    val authorsLabel = Label("By: Anshul Mahajan & Ricky Foxell")  //Label for the authors of the game
-    authorsLabel.foreground = white                                     //Set foreground (text) color to white
-    authorsLabel.font = new Font("Monospaced", 100, 25)                 //Set font attributes
+    val authorsLabel = Label("By: Anshul Mahajan & Ricky Foxell")       //Label for the authors of the game
+    authorsLabel.foreground = white                                       //Set foreground (text) color to white
+    authorsLabel.font = new Font("Monospaced", 100, 25)                   //Set font attributes
 
     val headlineLabel = new Label("A Haunted House Adventure")
     headlineLabel.foreground = white
     headlineLabel.font = new Font("Monospaced", 100, 35)
 
-    val topHeader = new GridPanel(2, 1):                           //Header Element -> contains the title of the game and the name of authors.
+    val topHeader = new GridPanel(2, 1):                                //Header Element -> contains the title of the game and the name of authors.
       background = darkGray
       contents += titleLabel
       contents += new GridPanel(4,1):
@@ -138,7 +138,8 @@ object GhostBustersGUI extends SimpleSwingApplication:
       openGuide()
 
     def quitButtonHandler() =
-      val optionSelected = Dialog.showConfirmation(top, "Are you sure you want to quit the game?", optionType = Dialog.Options.OkCancel, title = "Quit")
+      val options = Vector("Yes", "Cancel")
+      val optionSelected = Dialog.showOptions(top, "Are you sure you want to quit the game?", optionType = Dialog.Options.OkCancel, title = "Quit", entries = options, initial = 0)
       if optionSelected == Dialog.Result.Ok then
         quit()
 
@@ -287,7 +288,7 @@ object GhostBustersGUI extends SimpleSwingApplication:
         gameOverHandler()
       this.locationInfo.text = this.player.location.fullDescription + "\n"
       this.inventoryListing.text = this.player.inventory + "\n"
-      this.turnCounter.text = "Turns played: " + this.game.turnCount
+      this.turnCounter.text = "Turns Played: " + this.game.turnCount + "           " + "Current Location: " + this.player.location.name
       this.ghostConvo.text = this.player.randomTaunt
       this.image.visible = false
       this.image.visible = true
