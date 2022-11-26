@@ -30,7 +30,12 @@ class Player(startingRoom: Room, ghost: GhostType):
     val destination = this.location.neighbor(room.toLowerCase)
     this.currentRoom = destination.getOrElse(this.currentRoom)
     ghost.advance()
+    sameRoomWithGhost
     if destination.isDefined then "You enter " + room + "." else "You can't enter " + room + "."
+    
+  def sameRoomWithGhost =
+    if this.location == ghost.location then
+      val mathProblem = MathHelper.getMathProblem
 
   def guess(name: String) =
     if name.toLowerCase == this.ghost.toString.toLowerCase then

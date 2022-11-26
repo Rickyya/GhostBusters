@@ -28,6 +28,9 @@ enum GhostType(traits: Map[String, Any]):
     location = Option(startingRoom)
     allRooms = Option(rooms)
 
+  /** Applies the ghost's indicators the the new room
+   * i.e. the ghost will leave its fingerprints if the ghosttype leaves fingerprints
+   * */
   private def applyIndicatorsToRoom() =
     for (indicator, value) <- getIndicators do
       indicator match
