@@ -30,7 +30,7 @@ object GhostBustersGUI extends SimpleSwingApplication:
 
 
     // Components:
-    val titleLabel = Label("Ghost Busters")                        //Label for the title of the game
+    val titleLabel = Label("\uD83D\uDC7B Ghost Busters \uD83D\uDC7B")                        //Label for the title of the game
     titleLabel.foreground = white                                       //Set foreground (text) color to white
     titleLabel.font = new Font("Monospaced", 100, 85)                   //Set font attributes
 
