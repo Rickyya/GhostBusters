@@ -30,12 +30,7 @@ class Player(startingRoom: Room, ghost: GhostType):
     val destination = this.location.neighbor(room.toLowerCase)
     this.currentRoom = destination.getOrElse(this.currentRoom)
     ghost.advance()
-    sameRoomWithGhost
     if destination.isDefined then "You enter " + room + "." else "You can't enter " + room + "."
-    
-  def sameRoomWithGhost =
-    if this.location == ghost.location then
-      val mathProblem = MathHelper().getMathProblem()
 
   def guess(name: String) =
     if name.toLowerCase == this.ghost.toString.toLowerCase then
@@ -54,7 +49,7 @@ class Player(startingRoom: Room, ghost: GhostType):
       scan.close()
       taunt
     var taunt = connect
-    val badWords = Vector("genital", "reproductive", "reproductive organs", "genitals", "groin", "retarded", "puffy")
+    val badWords = Vector("genital", "reproductive", "reproductive organs", "genitals", "groin", "retarded", "puffy", "reproductive organ")
     while badWords.exists( (word) => taunt.contains(word) ) do
       taunt = connect
     "\"" + taunt.substring(13, taunt.length - 2) + "\"" + "\n" + "  " + s"- ${ghost.name.get} \uD83D\uDC7B"
