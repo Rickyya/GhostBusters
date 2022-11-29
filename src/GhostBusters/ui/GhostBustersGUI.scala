@@ -1,33 +1,39 @@
 package GhostBusters.ui
-import GhostBusters.map.{Game, Room}
 
-import scala.swing.*
-import scala.swing.event.*
-import javax.swing.{ImageIcon, OverlayLayout, UIManager}
+/** Internal Imports */
 import GhostBusters.*
-
+import GhostBusters.map.{Game, Room}
+/** Java Imports */
+import javax.swing.{ImageIcon, OverlayLayout, UIManager}
 import java.awt.{Cursor, Desktop, Dimension, Graphics2D, Insets, Point, Toolkit}
-import scala.language.adhocExtensions
 import java.awt.Color.*
 import java.awt.Graphics2D.*
 import java.io.File
 import javax.sound.sampled.*
+/** Scala Imports */
+import scala.swing.*
+import scala.swing.event.*
+import scala.language.adhocExtensions
 import scala.swing.Dialog.Message
 
-/** The singleton object `AdventureGUI` represents a GUI-based version of the Adventure
+/** The singleton object `GhostBustersGUI` represents a GUI-based version of the GhostBusters
   * game application. The object serves as a possible entry point for the game app, and can
   * be run to start up a user interface that operates in a separate window. The GUI reads
   * its input from a text field and displays information about the game world in uneditable
-  * text areas.
-  *
-  * @see [[AdventureTextUI]] */
-
+  * text areas. */
 object GhostBustersGUI extends SimpleSwingApplication:
   UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName)
 
+
+  // Background Music Constants:
+  val music = new File("src/Ghostbusters/assets/bg_music.wav")
+  val audio = AudioSystem.getAudioInputStream(music)
+  val clip = AudioSystem.getClip
+  clip.open(audio)
+
+
   //Window for the start of the game
   def top = new MainFrame:
-
 
     // Components:
     val titleLabel = Label("\uD83D\uDC7B Ghost Busters \uD83D\uDC7B")   //Label for the title of the game
@@ -38,19 +44,19 @@ object GhostBustersGUI extends SimpleSwingApplication:
     authorsLabel.foreground = white                                       //Set foreground (text) color to white
     authorsLabel.font = new Font("Monospaced", 100, 25)                   //Set font attributes
 
-    val headlineLabel = new Label("A Haunted House Adventure")
-    headlineLabel.foreground = white
-    headlineLabel.font = new Font("Monospaced", 100, 35)
+    val headlineLabel = new Label("A Haunted House Adventure")          // Label for the sub heading of the game
+    headlineLabel.foreground = white                                      //Set foreground (text) color to white
+    headlineLabel.font = new Font("Monospaced", 100, 35)                  //Set font attributes
 
     val topHeader = new GridPanel(2, 1):                                //Header Element -> contains the title of the game and the name of authors.
-      background = darkGray
+      background = darkGray                                               //Set background color to dark gray
       contents += titleLabel
       contents += new GridPanel(4,1):
         background = darkGray
         contents += headlineLabel
         contents += authorsLabel
-      maximumSize = this.preferredSize
-      minimumSize = this.preferredSize
+      maximumSize = this.preferredSize                                  //Force size to the preferred size
+      minimumSize = this.preferredSize                                  //Force size to the preferred size
 
     var innerPlayButton = new Button("Start Game"):
       font = new Font("Monospaced", 100, 35)
@@ -131,6 +137,7 @@ object GhostBustersGUI extends SimpleSwingApplication:
 
     // Event Handlers:
     def playButtonHandler() =
+      stopMusicOnExit()
       PlayScreen.visible = true
       dispose()
 
@@ -141,6 +148,7 @@ object GhostBustersGUI extends SimpleSwingApplication:
       val options = Vector("Yes", "Cancel")
       val optionSelected = Dialog.showOptions(top, "Are you sure you want to quit the game?", optionType = Dialog.Options.OkCancel, title = "Quit", entries = options, initial = 0)
       if optionSelected == Dialog.Result.Ok then
+        stopMusicOnExit()
         quit()
 
     def openGuide() =
@@ -148,12 +156,11 @@ object GhostBustersGUI extends SimpleSwingApplication:
       Desktop.getDesktop.open(file)
 
     def playMusicOnStart() =
-      val music = new File("src/Ghostbusters/assets/bg_music.wav")
-      val audio = AudioSystem.getAudioInputStream(music)
-      val clip = AudioSystem.getClip
       clip.loop(10000)
-      clip.open(audio)
       clip.start()
+
+    def stopMusicOnExit() =
+      clip.stop()
 
 
     // Set up the GUI’s initial state:
@@ -274,6 +281,7 @@ object GhostBustersGUI extends SimpleSwingApplication:
     def playTurn(command: String) =
       val turnReport = this.game.playTurn(command)
       if this.player.hasQuit then
+        stopMusicOnExit()
         this.dispose()
         top.visible = true
       else
@@ -304,11 +312,19 @@ object GhostBustersGUI extends SimpleSwingApplication:
         message = "Winner"
       val optionSelected = Dialog.showOptions(top, message, title = "Game Over!", optionType = Dialog.Options.YesNo, entries = options, initial = 0, messageType = messageT)
       if optionSelected == Dialog.Result.No then
+        stopMusicOnExit()
         quit()
       else
+        stopMusicOnExit()
         dispose()
         top.visible = true
 
+    def playMusicOnStart() =
+      clip.loop(10000)
+      clip.start()
+
+    def stopMusicOnExit() =
+      clip.stop()
 
     // Menu:
     this.menuBar = new MenuBar:
@@ -329,7 +345,9 @@ object GhostBustersGUI extends SimpleSwingApplication:
     this.pack()
     this.maximize()
     this.input.requestFocusInWindow()
+    this.playMusicOnStart()
 
+  end PlayScreen
 
   // Enable this code to work even under the -language:strictEquality compiler option:
   private given CanEqual[Component, Component] = CanEqual.derived

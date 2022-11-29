@@ -1,9 +1,13 @@
 package GhostBusters.characters;
-import GhostBusters.map.*
 
+/** Internal Imports */
+import GhostBusters.map.*
+/** Java Imports */
 import java.net.http.HttpRequest
+/** Scala Imports */
 import scala.util.Random
 
+/** Parameterized enumerations of the types of ghosts (GhostType) along with individual characteristics */
 enum GhostType(traits: Map[String, Any]):
   case Inferno    extends GhostType(Map("fingerprints"->true, "camera"->true,                "bacteria"->true, "temp"->"cold")  .withDefaultValue(false))
   case Yeti       extends GhostType(Map(                      "camera"->true,                "bacteria"->true, "temp"->"hot")   .withDefaultValue(false))
@@ -34,9 +38,14 @@ enum GhostType(traits: Map[String, Any]):
   private def applyIndicatorsToRoom() =
     for (indicator, value) <- getIndicators do
       indicator match
-        case "camera" => if getLocation.cameraInstalled.isDefined then getLocation.cameraInstalled.get.imageOfGhost = true
-        case "sound" => if getLocation.soundrecorderInstalled.isDefined then getLocation.soundrecorderInstalled.get.soundOfGhost = true
-        case _ => getCurrentRoomIndicators(indicator) = value
+        case "camera" =>
+          if getLocation.cameraInstalled.isDefined then
+            getLocation.cameraInstalled.get.imageOfGhost = true
+        case "sound" =>
+          if getLocation.soundrecorderInstalled.isDefined then
+            getLocation.soundrecorderInstalled.get.soundOfGhost = true
+        case _ =>
+          getCurrentRoomIndicators(indicator) = value
 
   /** Advance is called by the player object everytime the player does one turn */
   def advance() =

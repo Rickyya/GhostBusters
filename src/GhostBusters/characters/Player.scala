@@ -1,26 +1,36 @@
 package GhostBusters.characters;
 
-import scala.collection.mutable.*
+/** Internal Imports */
 import GhostBusters.map.*
 import GhostBusters.misc.*
-
-
+/** Java Imports */
 import java.net.URL
 import java.util.Scanner
+/** Scala Imports */
 import scala.util.Random
+import scala.collection.mutable.*
 
+/** Represents the player of the game.
+ *
+ * A player object is immutable. All commands that the player uses are routed from 'Action' to this class.
+ *
+ *
+ * @param startingRoom : the room where the player starts; later generalized to currentRoom
+ * @param ghost        : the ghost which is haunting the player*/
 class Player(startingRoom: Room, ghost: GhostType):
 
-  var angeredGhost = false
-  private var currentRoom = startingRoom        // gatherer: changes in relation to the previous location
-  private var quitCommandGiven = false                // one-way flag
-  private var nameGuessed = false
-  private var nameGuessedWrong = false
-  private var inv = Map[String, Item]()
+  var angeredGhost = false                            // checks if the ghost is "angered" -> super-powered ghost
+  private var currentRoom = startingRoom              // gatherer: changes in relation to the previous location
+  private var quitCommandGiven = false                // flag to check if the game has been quit
+  private var nameGuessed = false                     // flag to check if the player has guessed the name of the ghost
+  private var nameGuessedWrong = false                // flag to check if the player has guessed the wrong name of the ghost
+  private var inv = Map[String, Item]()               // map of all the items that the player has in their inventory
 
   /** Determines if the player has indicated a desire to quit the game. */
   def hasQuit = this.quitCommandGiven
+  /** Determines if the player has guessed the name of the ghost correctly. */
   def hasWon = this.nameGuessed
+  /** Determines if the player has guessed the name of the ghost incorrectly. */
   def hasLost = this.nameGuessedWrong
 
   /** Returns the player’s current location. */
@@ -40,20 +50,6 @@ class Player(startingRoom: Room, ghost: GhostType):
       nameGuessedWrong = true
       "\r"
 
-  def randomTaunt =
-    def connect =
-      val tauntAPI = new URL("https://genr8rs.com/api/Content/Fun/GameTauntGenerator?genr8rsUserId=1669455422.61076381de3e9519a&_sInsultLevel=funny")
-      val connection = tauntAPI.openConnection()
-      val scan = new Scanner(connection.getInputStream)
-      val taunt = scan.nextLine()
-      scan.close()
-      taunt
-    var taunt = connect
-    val badWords = Vector("genital", "reproductive", "reproductive organs", "genitals", "groin", "retarded", "puffy", "reproductive organ")
-    while badWords.exists( (word) => taunt.contains(word) ) do
-      taunt = connect
-    "\"" + taunt.substring(13, taunt.length - 2) + "\"" + "\n" + "  " + s"- ${ghost.name.get} \uD83D\uDC7B"
-
   def quit() =
     this.quitCommandGiven = true
     ""
@@ -67,14 +63,6 @@ class Player(startingRoom: Room, ghost: GhostType):
       "Inventory" + "\n" + inv.values.mkString("\n")
     else
       "Inventory" + "\n" + "You are empty-handed."
-
-  def angerGhost =
-    if angeredGhost then
-      angeredGhost = false
-      location.indicators.clear()
-      "\n\n" + ghost.name.get + ": You have found something that belongs to me... You will regret this\n\nYou realize that the room was wiped clean by the ghost..."
-    else
-      ""
 
   def get(itemName: String) =
     if itemName == "camera" then
@@ -114,6 +102,32 @@ class Player(startingRoom: Room, ghost: GhostType):
       this.inv(itemName).examine + angerGhost
     else
       "You don't have " + itemName
+
+  // Ghost-specific methods:
+  /** Generates a random taunt from the API that the ghost then says to the player. */
+  def randomTaunt =
+    // Forms a HTTP Request to the API, returns the taunt
+    def connect =
+      val tauntAPI = new URL("https://genr8rs.com/api/Content/Fun/GameTauntGenerator?genr8rsUserId=1669455422.61076381de3e9519a&_sInsultLevel=funny")
+      val connection = tauntAPI.openConnection()
+      val scan = new Scanner(connection.getInputStream)
+      val taunt = scan.nextLine()
+      scan.close()
+      taunt.substring(13, taunt.length - 2)
+    var taunt = connect
+    val badWords = Vector("genital", "reproductive", "reproductive organs", "genitals", "groin", "retarded", "puffy", "reproductive organ")
+    while badWords.exists( (word) => taunt.contains(word) ) do
+      taunt = connect
+    "\"" + taunt + "\"" + "\n" + "  " + s"- ${ghost.name.get} \uD83D\uDC7B"
+
+  /** Checks if the ghost is angered and then removes all indicators from current location. */
+  def angerGhost =
+    if angeredGhost then
+      angeredGhost = false
+      location.indicators.clear()          // removes all indicators from current location; used to agitate the player
+      "\n\n" + ghost.name.get + ": You have found something that belongs to me... You will regret this\n\nYou realize that the room was wiped clean by the ghost..."
+    else
+      ""
 
   /** Returns a brief description of the player’s state, for debugging purposes. */
   override def toString = "Now at: " + this.location.name
