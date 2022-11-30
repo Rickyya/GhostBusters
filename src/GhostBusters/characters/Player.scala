@@ -122,11 +122,18 @@ class Player(startingRoom: Room, ghost: GhostType):
       val taunt = scan.nextLine()
       scan.close()
       taunt.substring(13, taunt.length - 2)
-    var taunt = connect
-    val badWords = Vector("genital", "reproductive", "reproductive organs", "genitals", "groin", "retarded", "puffy", "reproductive organ")
-    while badWords.exists( (word) => taunt.contains(word) ) do
-      taunt = connect
-    "\"" + taunt + "\"" + "\n" + "  " + s"- ${ghost.name.get} \uD83D\uDC7B"
+
+    try
+      var taunt = connect
+      val badWords = Vector("genital", "reproductive", "reproductive organs", "genitals", "groin", "retarded", "puffy", "reproductive organ")
+      while badWords.exists( (word) => taunt.contains(word) ) do
+        taunt = connect
+      "\"" + taunt + "\"" + "\n" + "  " + s"- ${ghost.name.get} \uD83D\uDC7B"
+    catch
+      case _ => "\"" + "You will regret coming to this house!" + "\"" + "\n" + "  " + s"- ${ghost.name.get} \uD83D\uDC7B"
+
+
+
 
   /** Checks if the ghost is angered and then removes all indicators from current location. */
   def angerGhost =
