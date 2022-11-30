@@ -1,4 +1,4 @@
-package GhostBusters.characters;
+package GhostBusters.characters
 
 /** Internal Imports */
 import GhostBusters.map.*
@@ -36,12 +36,12 @@ class Player(startingRoom: Room, ghost: GhostType):
   /** Returns the player’s current location. */
   def location = this.currentRoom
 
-  /** Moves the player to the specified room */
+  /** Moves the player to the specified room and calls the ghosts advance() method */
   def go(room: String) =
     val destination = this.location.neighbor(room.toLowerCase)
     this.currentRoom = destination.getOrElse(this.currentRoom)
     ghost.advance()
-    if destination.isDefined then "You enter " + room + "." else "You can't enter " + room + "."
+    if destination.isDefined then "You enter " + room + "." else room + " does not exist."
 
   /** Guess the ghost type */
   def guess(name: String) =
