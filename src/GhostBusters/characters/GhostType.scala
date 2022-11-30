@@ -16,18 +16,21 @@ enum GhostType(traits: Map[String, Any]):
   case Spirit     extends GhostType(Map("fingerprints"->true,                 "sound"->true,                   "temp"->"cold")  .withDefaultValue(false))
   case Ultraghost extends GhostType(Map("fingerprints"->true, "camera"->true, "sound"->true, "bacteria"->true, "temp"->"normal").withDefaultValue(false))
 
+
   var name: Option[String] = None
   var location: Option[Room] = None
   var allRooms: Option[Vector[Room]] = None
   def getName = name.get
+
+  /** Helper functions */
   private def getLocation = location.get
   private def getAllRooms = allRooms.get
   private def getIndicators = traits
   private def getCurrentRoomIndicators = getLocation.indicators
   private def setLocation(loc: Room) = location = Option(loc)
 
+  /** Initialize function */
   def init(nameToSet: String, startingRoom: Room, rooms: Vector[Room]) =
-    // Set variables
     name = Option(nameToSet)
     location = Option(startingRoom)
     allRooms = Option(rooms)
@@ -47,7 +50,8 @@ enum GhostType(traits: Map[String, Any]):
         case _ =>
           getCurrentRoomIndicators(indicator) = value
 
-  /** Advance is called by the player object everytime the player does one turn */
+  /** Ghost moves into a random room in the house and applies its indicators to the new room
+   * Advance is called by the player object everytime the player does one turn */
   def advance() =
     setLocation(getAllRooms(Random.between(0, getAllRooms.size)))
     applyIndicatorsToRoom()

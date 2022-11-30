@@ -36,12 +36,14 @@ class Player(startingRoom: Room, ghost: GhostType):
   /** Returns the player’s current location. */
   def location = this.currentRoom
 
+  /** Moves the player to the specified room */
   def go(room: String) =
     val destination = this.location.neighbor(room.toLowerCase)
     this.currentRoom = destination.getOrElse(this.currentRoom)
     ghost.advance()
     if destination.isDefined then "You enter " + room + "." else "You can't enter " + room + "."
 
+  /** Guess the ghost type */
   def guess(name: String) =
     if name.toLowerCase == this.ghost.toString.toLowerCase then
       nameGuessed = true
@@ -58,12 +60,15 @@ class Player(startingRoom: Room, ghost: GhostType):
   def addItems(items: Vector[Item]) = for item <- items do addItem(item)
   def has(itemName: String) = this.inv.keys.exists(_ == itemName.toLowerCase)
 
+  /** Returns a string of the players inventory */
   def inventory: String =
     if inv.nonEmpty then
       "Inventory" + "\n" + inv.values.mkString("\n")
     else
       "Inventory" + "\n" + "You are empty-handed."
 
+  /** pickup/get tries to get an item in a room and then adds it into the players inventory */
+  def pickup(itemName: String) = get(itemName)
   def get(itemName: String) =
     if itemName == "camera" then
       if this.location.cameraInstalled.isDefined then
@@ -85,18 +90,21 @@ class Player(startingRoom: Room, ghost: GhostType):
     else
       s"There is no $itemName here to pick up."
 
+  /** use an item and call angerGhost if possible */
   def use(itemName: String) =
     if has(itemName) then
       this.inv(itemName).use + angerGhost
     else
       s"You don't have $itemName"
-  
+
+  /** Install an item if possible */
   def install(itemName: String) =
     if has(itemName) && this.inv(itemName).isInstanceOf[Installable] then
       this.inv(itemName).asInstanceOf[Installable].install
     else
       s"You don't have $itemName or it can't be installed."
 
+  /** Examine an item if possible */
   def examine(itemName: String) =
     if has(itemName) then
       this.inv(itemName).examine + angerGhost
