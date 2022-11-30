@@ -6,7 +6,7 @@ import GhostBusters.characters.*
  * @param name : The name of the item
  * @param owner: The (option) owner of an item. None or Player */
 abstract class Item(val name: String, owner: Option[Player]):
-  var uses = 3
+  var uses = 4
   /** Check  */
   def checkUsesLeft =
     if uses == 0 then

@@ -55,6 +55,7 @@ class Player(startingRoom: Room, ghost: GhostType):
   def quit() =
     this.quitCommandGiven = true
     ""
+  /** helper functions for the inventory */
   def removeItem(itemName: String) = this.inv.remove(itemName)
   def addItem(item: Item) = this.inv += item.name -> item
   def addItems(items: Vector[Item]) = for item <- items do addItem(item)
