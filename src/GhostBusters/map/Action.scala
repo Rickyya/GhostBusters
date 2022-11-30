@@ -29,7 +29,7 @@ class Action(input: String):
     case "commands"     => Some(this.availableCommands)
     case other          => None
 
-  def help = "See the guide for help or see the available commands with 'commands'"
+  def help = "See the guide for help or see the available commands with 'commands'\nTop left of the screen -> Help -> Open guide"
   def availableCommands = Vector("enter", "get", "use", "install", "examine", "inv", "inventory", "guess", "quit").mkString(", ")
 
   /** Returns a textual description of the action object, for debugging purposes. */

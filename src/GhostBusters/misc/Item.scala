@@ -1,9 +1,13 @@
 package GhostBusters.misc;
 import GhostBusters.characters.*
 
-
+/** Represents an item.
+ *
+ * @param name : The name of the item
+ * @param owner: The (option) owner of an item. None or Player */
 abstract class Item(val name: String, owner: Option[Player]):
   var uses = 3
+  /** Check  */
   def checkUsesLeft =
     if uses == 0 then
       owner.get.removeItem(this.name)
