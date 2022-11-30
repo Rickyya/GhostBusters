@@ -128,9 +128,9 @@ class Player(startingRoom: Room, ghost: GhostType):
       val badWords = Vector("genital", "reproductive", "reproductive organs", "genitals", "groin", "retarded", "puffy", "reproductive organ")
       while badWords.exists( (word) => taunt.contains(word) ) do
         taunt = connect
-      "\"" + taunt + "\"" + "\n" + "  " + s"- ${ghost.name.get} \uD83D\uDC7B"
+      "\"" + taunt + "\"" + "\n" + "  " + s"- ${ghost.getName} \uD83D\uDC7B"
     catch
-      case _ => "\"" + "You will regret coming to this house!" + "\"" + "\n" + "  " + s"- ${ghost.name.get} \uD83D\uDC7B"
+      case _ => "\"" + "You will regret coming to this house!" + "\"" + "\n" + "  " + s"- ${ghost.getName} \uD83D\uDC7B"
 
 
 
