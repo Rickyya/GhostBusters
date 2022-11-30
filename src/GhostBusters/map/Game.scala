@@ -1,7 +1,10 @@
 package GhostBusters.map
+
+/** Internal Imports */
 import GhostBusters.map.*
 import GhostBusters.characters.*
 import GhostBusters.misc.*
+/** Scala Imports */
 import scala.*
 import scala.collection.immutable.Vector
 import scala.collection.mutable.Buffer
@@ -10,44 +13,44 @@ import scala.util.Random
 class Game:
 
   /** the name of the game */
-  val title = "A Haunted House Adventure"
+  val title = "GhostBusters: A Haunted House Adventure"
 
   private val (basement: Room, floor1: Room, floor2: Room, attic: Room) =  (
-    Room("Basement", "You are in the basement.", false),
-    Room("Floor1", "You are on the first floor.", false),
-    Room("Floor2", "You are on the second floor.", false),
-    Room("Attic", "You are in the attic.", false)
+    Room("Basement", "You are in the basement. There is water all around. It stinks of mold. Did the ghost come here? \uD83D\uDC40", false),
+    Room("Floor1", "You are on the first floor. There is a speck of daylight but it's still kinda dark. There are blood stains on the floor. Are you sure you wanna go ahead?", false),
+    Room("Floor2", "You are on the second floor. There are bats all around the ceiling. There are loud bangs coming from somewhere. Did the ghost come here?", false),
+    Room("Attic", "You are in the attic. There are killed animals on the floor. It stinks like animal blood. Did the ghost come here?", false)
   )
 
   private val staircase = Room("staircase", "You are in the staircase. The stairs creak with every move. There are spider webs all around. Are you in the right place?", true)
   staircase.setNeighbors(Vector("basement" -> basement, "floor1" -> floor1, "floor2" -> floor2, "attic" -> attic))
 
-  // basement
-  private val storage = Room("Storage", "desc", false)
-  private val laundry = Room("Laundry", "desc", false)
+  // All rooms in Basement
+  private val storage = Room("Storage", "The room is full of empty boxes and empty wardrobes.", false)
+  private val laundry = Room("Laundry", "There is an empty washing machine. Don't think it works, though. The dryer is making weird noises.", false)
   basement.setNeighbors(Vector("staircase" -> staircase, "storage" -> storage, "laundry" -> laundry))
   laundry.setNeighbors(Vector("storage" -> storage, "staircase" -> staircase))
   storage.setNeighbors(Vector("laundry" -> laundry, "staircase" -> staircase))
 
-  // floor 1
-  private val bathroom = Room("Bathroom" , "desc", false)
-  private val foyer = Room("Foyer", "You are in the foyer on the first floor", false)
-  private val masterbedroom = Room("Master Bedroom", "desc", false)
+  // All rooms in Floor 1
+  private val bathroom = Room("Bathroom" , "The bathroom has a broken sink. The floor is full of water.", false)
+  private val foyer = Room("Foyer", "The room is practically empty. There is a sofa though. It's broken, however.", false)
+  private val masterbedroom = Room("Master Bedroom", "There is bed in the room. There is someone lying down though \uD83D\uDC40.", false)
   floor1.setNeighbors(Vector("staircase" -> staircase, "bathroom"->bathroom, "foyer" -> foyer, "masterbedroom" -> masterbedroom))
   bathroom.setNeighbors(Vector("staircase" -> staircase, "foyer" -> foyer, "masterbedroom" -> masterbedroom))
   foyer.setNeighbors(Vector("staircase" -> staircase, "bathroom"->bathroom, "masterbedroom" -> masterbedroom))
   masterbedroom.setNeighbors(Vector("staircase" -> staircase, "bathroom"->bathroom, "foyer" -> foyer))
 
-  // floor 2
-  private val kitchen = Room("Kitchen", "desc", false)
-  private val guestbedroom = Room("Guest-Bedroom", "desc", false)
+  // All rooms in Floor 2
+  private val kitchen = Room("Kitchen", "Your average kitchen. Kinda sus though.", false)
+  private val guestbedroom = Room("Guest-Bedroom", "There is bed in the room but no guests. Sus?", false)
   floor2.setNeighbors(Vector("staircase" -> staircase, "kitchen" -> kitchen, "guestbedroom" -> guestbedroom))
   kitchen.setNeighbors(Vector("staircase" -> staircase, "guestbedroom" -> guestbedroom))
   guestbedroom.setNeighbors(Vector("staircase" -> staircase, "kitchen" -> kitchen))
 
-  // attic
-  private val storage2 = Room("Storage", "desc", false)
-  private val observatory = Room("Observatory", "desc", false)
+    // All rooms in Attic
+  private val storage2 = Room("Storage", "Another storage full of boxes. All empty though.", false)
+  private val observatory = Room("Observatory", "There is a huge telescope in the room. And the full moon is visible. You can hear wolves somehow.", false)
   attic.setNeighbors(Vector("staircase" -> staircase, "storage" -> storage2, "observatory" -> observatory))
   storage2.setNeighbors(Vector("staircase" -> staircase, "observatory" -> observatory))
   observatory.setNeighbors(Vector("staircase" -> staircase, "storage" -> storage2))
@@ -63,10 +66,10 @@ class Game:
     * Player: Player(startingRoom, the ghost)
     * */
   val ghost = allGhosts(Random.nextInt(allGhosts.length))
-  val randomNames = Vector("Michael", "George", "Lisa", "Emma")
+  val randomNames = Vector("Michael", "George", "Lisa", "Emma", "Joakim", "Arturo", "Valak")
   val randomName = randomNames(Random.nextInt(randomNames.size))
   ghost.init(randomName + " the Ghost", basement, allRooms)
-  print(ghost) //REMVOVE IN PROD
+  print(ghost) //REMOVE IN PROD
 
   /** The character that the player controls in the game. */
   val player = Player(staircase, ghost)
@@ -82,7 +85,7 @@ class Game:
   /** The number of turns that have passed since the start of the game. */
   var turnCount = 0
   /** The maximum number of turns that this adventure game allows before time runs out. */
-  val turnLimit = 40
+  val turnLimit = 20
 
   /** Determines if the game is complete, that is, if the player has won. */
   def isComplete =
