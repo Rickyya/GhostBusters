@@ -1,4 +1,4 @@
-package GhostBusters.characters;
+package GhostBusters.characters
 
 /** Internal Imports */
 import GhostBusters.map.*
