@@ -169,7 +169,7 @@ object GhostBustersGUI extends SimpleSwingApplication:                  //Single
 
     /** This method opens the PDF of the Playing Guide for the game. */
     def openGuide() =
-      val file = new File("src/Ghostbusters/assets/Playing guide.pdf")
+      val file = new File("src/Ghostbusters/assets/GhostBusters - Playing Guide.pdf")
       Desktop.getDesktop.open(file)
 
     /** This method starts the background music and loops it (almost) infinite times. */
@@ -301,7 +301,7 @@ object GhostBustersGUI extends SimpleSwingApplication:                  //Single
     // Event Handlers:
     /** This method opens the PDF of the Playing Guide for the game. */
     def openGuide() =
-      val file = new File("src/Ghostbusters/assets/Playing guide.pdf")
+      val file = new File("src/Ghostbusters/assets/GhostBusters - Playing Guide.pdf")
       Desktop.getDesktop.open(file)
 
     /** This method is called when the user presses enter in the input. The method pushes the command to the internal game logic. */
