@@ -105,6 +105,7 @@ class Game:
     if this.isComplete then
       var message = "You found out my ghost type! AHHHHHHH I'M DEAD! \nGood game, ghostbuster :)"
       if player.hasLost then message = "Loser! I ate you up! \nYou're dead :)"
+      else if turnCount == turnLimit then message = "Loser! You used all your turns allowed."
       message
     else  // game over due to player quitting
       "Quitter!"
